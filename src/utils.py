@@ -1,9 +1,6 @@
 import os
 import sys
-
-import numpy as np 
-import pandas as pd
-# import dill
+import yaml
 import pickle
 
 
@@ -48,3 +45,24 @@ def load_object(file_path):
 
     except Exception as e:
         raise CustomException(e, sys)
+    
+
+
+def generate_data_yaml(
+    train_img_dir="data/annotated/train/images",
+    val_img_dir="data/annotated/val/images",
+    test_img_dir="data/annotated/test/images",
+    class_names=["bottle"],
+    yaml_path="data.yaml"
+):
+    data_config = {
+        "train": train_img_dir,
+        "val": val_img_dir,
+        "test": test_img_dir,
+        "nc": len(class_names),
+        "names": class_names
+    }
+
+    with open(yaml_path, "w") as f:
+        yaml.dump(data_config, f)
+

@@ -1,0 +1,6 @@
+names:
+- bottle
+nc: 1
+test: data/annotated/test/images
+train: data/annotated/train/images
+val: data/annotated/val/images

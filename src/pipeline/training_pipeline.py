@@ -4,13 +4,15 @@ from src.exception import CustomException
 
 from src.components.image_train_test_split import ImageTrainTestSplitter, ImageSplitConfig
 from src.components.augment import ImageAugmentor, ImageAugmentorConfig
-# from src.components.train import ModelTrainer, ModelTrainerConfig  # if applicable
+from src.utils import generate_data_yaml
+from src.components.model_trainer import ModelTrainer, ModelTrainerConfig  
 
 class TrainingPipeline:
     def __init__(self):
         # You can override config values here if needed
         self.split_config = ImageSplitConfig()
         self.augmentor_config = ImageAugmentorConfig()
+        self.model_config = ModelTrainerConfig()
 
     def run(self):
         try:
@@ -30,11 +32,20 @@ class TrainingPipeline:
                 src_lbl_dir = "data/augmented/train/labels",
                 dst_img_dir = train_dir + "/images",
                 dst_lbl_dir = train_dir + "/labels")
-
-            # STEP 3: Training (optional)
-            # logging.info("Step 3: Training the model")
-            # model_trainer = ModelTrainer(ModelTrainerConfig())
-            # model_trainer.initiate_model_trainer()
+            
+            # STEP 3: Generating yaml for yolov5
+            generate_data_yaml(
+                train_img_dir="data/annotated/train/images",
+                val_img_dir="data/annotated/val/images",
+                test_img_dir="data/annotated/test/images",
+                class_names=["bottle"],  # or pass more if needed
+                yaml_path="data.yaml"
+            )
+                
+            # STEP 4: Training
+            logging.info("Step 3: Training the model")
+            model_trainer = ModelTrainer(self.model_config)
+            model_trainer.initiate_model_trainer()
 
             logging.info("Training pipeline completed successfully")
 
