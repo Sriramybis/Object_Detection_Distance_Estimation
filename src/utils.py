@@ -16,11 +16,12 @@ def load_yolo_label(label_path):
         class_labels = []
         for line in lines:
             parts = line.strip().split()
-            class_id = int(parts[0])
+            class_id = int(float(parts[0]))  # 🔧 fixes '0.0' or '1.0'
             bbox = list(map(float, parts[1:]))
             bboxes.append(bbox)
             class_labels.append(class_id)
         return bboxes, class_labels
+
 
 def save_yolo_label(path, bboxes, class_labels):
     with open(path, "w") as f:

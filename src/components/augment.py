@@ -77,37 +77,51 @@ class ImageAugmentor:
         except Exception as e:
             raise CustomException(e, sys)
         
-    def consolidate_to_training(self, train_img_dir, train_lbl_dir):
+    def consolidate_to_training(
+        self,
+        src_img_dir: str = "data/augmented/train/images",
+        src_lbl_dir: str = "data/augmented/train/labels",
+        dst_img_dir: str = "data/annotated/train/images",
+        dst_lbl_dir: str = "data/annotated/train/labels"
+    ):
         """
-        Copy all images and labels from the augmented output directory
-        into the given training image and label directories.
+        Copy all images and labels from the augmentation output directories
+        into the specified training image and label directories.
         """
         try:
-            for img_file in os.listdir(self.config.output_img_dir):
+            for img_file in os.listdir(src_img_dir):
                 shutil.copy2(
-                    os.path.join(self.config.output_img_dir, img_file),
-                    os.path.join(train_img_dir, img_file)
+                    os.path.join(src_img_dir, img_file),
+                    os.path.join(dst_img_dir, img_file)
                 )
 
-            for lbl_file in os.listdir(self.config.output_lbl_dir):
+            for lbl_file in os.listdir(src_lbl_dir):
                 shutil.copy2(
-                    os.path.join(self.config.output_lbl_dir, lbl_file),
-                    os.path.join(train_lbl_dir, lbl_file)
+                    os.path.join(src_lbl_dir, lbl_file),
+                    os.path.join(dst_lbl_dir, lbl_file)
                 )
 
-            logging.info(" Consolidated augmented data into training folder")
+            logging.info("Consolidated augmented data into training folder")
+
+            # Delete the entire augmented folder after consolidation
+            augmented_root = os.path.commonpath([src_img_dir, src_lbl_dir]).split("/train")[0]
+            if os.path.exists(augmented_root):
+                shutil.rmtree(augmented_root)
+                logging.info(f"🧹 Deleted augmented folder: {augmented_root}")
 
         except Exception as e:
             raise CustomException(e, sys)
 
 
+
 if __name__ == "__main__":
     augmentor = ImageAugmentor()
-    aug_img_path, aug_lbl_path = augmentor.initiate_image_augmentation()
-    augmentor.consolidate_to_training(aug_img_path,aug_lbl_path)
 
-    # Optional consolidation step (uncomment if you want to merge into training set)
-    # for file in os.listdir(aug_img_path):
-    #     shutil.copy2(os.path.join(aug_img_path, file), os.path.join("data/annotated/train/images", file))
-    # for file in os.listdir(aug_lbl_path):
-    #     shutil.copy2(os.path.join(aug_lbl_path, file), os.path.join("data/annotated/train/labels", file))
+    aug_img_path, aug_lbl_path = augmentor.initiate_image_augmentation()
+    
+    augmentor.consolidate_to_training(
+        src_img_dir=aug_img_path,
+        src_lbl_dir=aug_lbl_path,
+        dst_img_dir="data/annotated/train/images",
+        dst_lbl_dir="data/annotated/train/labels"
+    )

@@ -24,9 +24,12 @@ class TrainingPipeline:
             # STEP 2: Data Augmentation on Training Set
             logging.info("Step 2: Augmenting training data")
             augmentor = ImageAugmentor(self.augmentor_config)
-            aug_img_path, aug_lbl_path = augmentor.initiate_image_augmentation()
-            augmentor.consolidate_to_training(train_img_dir=train_dir + "/images",
-                                              train_lbl_dir=train_dir + "/labels")
+            augmentor.initiate_image_augmentation()
+            augmentor.consolidate_to_training(
+                src_img_dir = "data/augmented/train/images",
+                src_lbl_dir = "data/augmented/train/labels",
+                dst_img_dir = train_dir + "/images",
+                dst_lbl_dir = train_dir + "/labels")
 
             # STEP 3: Training (optional)
             # logging.info("Step 3: Training the model")
