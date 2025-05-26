@@ -63,3 +63,34 @@ class LivePredictor:
 
         except Exception as e:
             raise CustomException(e, sys)
+        
+    def flask_stream(self):
+        try:
+            cap = cv2.VideoCapture(self.config.webcam_index)
+
+            if not cap.isOpened():
+                logging.error("Webcam not accessible in Flask stream.")
+                return
+
+            logging.info("Flask streaming started.")
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                results = self.model.predict(source=frame, stream=True)
+                frame = self.draw_boxes(frame, results)
+
+                # Encode frame as JPEG
+                _, buffer = cv2.imencode('.jpg', frame)
+                frame_bytes = buffer.tobytes()
+
+                # Yield frame for browser-based MJPEG stream
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+            cap.release()
+
+        except Exception as e:
+            raise CustomException(e, sys)
+

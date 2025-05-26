@@ -9,7 +9,7 @@ import shutil
 class ModelTrainerConfig:
     data_yaml: str = "data.yaml"
     model_arch: str = "yolov5s.pt"
-    epochs: int = 10
+    epochs: int = 50
     imgsz: int = 640
     project: str = "runs/train"
     name: str = "bottle-model"
