@@ -5,10 +5,27 @@ import numpy as np
 import pandas as pd
 # import dill
 import pickle
-from sklearn.metrics import r2_score
-from sklearn.model_selection import GridSearchCV
+
 
 from src.exception import CustomException
+
+def load_yolo_label(label_path):
+    with open(label_path, "r") as f:
+        lines = f.readlines()
+        bboxes = []
+        class_labels = []
+        for line in lines:
+            parts = line.strip().split()
+            class_id = int(parts[0])
+            bbox = list(map(float, parts[1:]))
+            bboxes.append(bbox)
+            class_labels.append(class_id)
+        return bboxes, class_labels
+
+def save_yolo_label(path, bboxes, class_labels):
+    with open(path, "w") as f:
+        for cls, bbox in zip(class_labels, bboxes):
+            f.write(f"{cls} {' '.join(map(str, bbox))}\n")
 
 def save_object(file_path, obj):
     try:
@@ -22,37 +39,6 @@ def save_object(file_path, obj):
     except Exception as e:
         raise CustomException(e, sys)
     
-def evaluate_models(X_train, y_train,X_test,y_test,models,param):
-    try:
-        pass
-        # report = {}
-
-        # for i in range(len(list(models))):
-        #     model = list(models.values())[i]
-        #     para=param[list(models.keys())[i]]
-
-        #     gs = GridSearchCV(model,para,cv=3)
-        #     gs.fit(X_train,y_train)
-
-        #     model.set_params(**gs.best_params_)
-        #     model.fit(X_train,y_train)
-
-        #     #model.fit(X_train, y_train)  # Train model
-
-        #     y_train_pred = model.predict(X_train)
-
-        #     y_test_pred = model.predict(X_test)
-
-        #     train_model_score = r2_score(y_train, y_train_pred)
-
-        #     test_model_score = r2_score(y_test, y_test_pred)
-
-        #     report[list(models.keys())[i]] = test_model_score
-
-        # return report
-
-    except Exception as e:
-        raise CustomException(e, sys)
     
 def load_object(file_path):
     try:

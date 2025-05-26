@@ -1,0 +1,7 @@
+pyqt5
+lxml
+pandas
+numpy
+matplotlib
+seaborn
+albumentations

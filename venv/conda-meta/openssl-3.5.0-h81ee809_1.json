@@ -4,8 +4,8 @@
   "channel": "https://conda.anaconda.org/conda-forge/osx-arm64",
   "constrains": [],
   "depends": [
-    "__osx >=11.0",
-    "ca-certificates"
+    "ca-certificates",
+    "__osx >=11.0"
   ],
   "extracted_package_dir": "/opt/miniconda3/pkgs/openssl-3.5.0-h81ee809_1",
   "files": [
@@ -1212,7 +1212,7 @@
         "path_type": "hardlink",
         "prefix_placeholder": "/Users/runner/miniforge3/conda-bld/openssl_split_1746222844215/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_place",
         "sha256": "5c62ea2b5994b583b330c110b35fc0e49bcad91d12a5af41a3956bc36e8b5290",
-        "sha256_in_prefix": "60a860709a54198393f434cc8be5444e6c88a9ea6a3fb2fa9115f49cdabb3711",
+        "sha256_in_prefix": "03d4b494c62c3cdfa0c9d17af951e7e2b7c90a756b8310622c10b274371f0410",
         "size_in_bytes": 4891504
       },
       {
