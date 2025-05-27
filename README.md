@@ -17,29 +17,6 @@ Users can start and stop the webcam stream, with bounding boxes and distance lab
 
 ---
 
-## Project Structure
-
-```
-obj_det_dist_est/
-├── app/
-│   ├── app.py               # Flask entry point
-│   ├── templates/
-│   │   └── index.html       # Frontend HTML
-│   └── static/
-│       └── style.css        # CSS styles
-├── src/
-│   ├── components/
-│   │   ├── live_predictor.py         # Live webcam logic
-│   │   └── prediction/
-│   │       └── distance_estimator.py # Distance calculation logic
-│   └── ...
-├── artifacts/
-│   └── best.pt              # Trained YOLOv5 model
-├── data/
-├── README.md
-```
-
----
 
 ## Getting Started
 
@@ -50,25 +27,44 @@ git clone https://github.com/your-username/obj_det_dist_est.git
 cd obj_det_dist_est
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r docker/requirements.txt
+pip install -r requirements.txt
 ```
 
 ---
 
-### Step 2: Make sure you have a trained model
+### Step 2: Add images and annotations to train
 
-Ensure `artifacts/best.pt` exists — this is the YOLOv5 model trained on your custom object (e.g., a bottle).  
-Train using `ultralytics` if not done yet:
+Folder structure:
+
+Output Directories created:
+obj_det_dist_est/
+├── data/
+│   ├── images/
+│   │   ├── img1.jpg
+│   │   ├── img2.jpg
+│   ├── annotations/
+│   │   ├── img1.txt
+│   │   ├── img2.txt
+
+
+Use [makesense.ai](https://www.makesense.ai/) for creating annotations. (Any annotation tool works. But output must be in yolo format)
+
+---
+
+### Step 3: Train your model
+
+
+Train using `training_pipeline.py` if not done yet:
 
 ```bash
-yolo detect train data=data.yaml model=yolov5s.pt epochs=50 imgsz=640
+python -m src.pipeline.training_pipeline
 ```
 
-Copy the resulting best model to `artifacts/best.pt`.
+Ensure `artifacts/best.pt` exists — this is the YOLOv5 model trained on your custom object (e.g., a bottle).  
 
 ---
 
-### Step 3: Run the Flask app
+### Step 4: Run the Flask app
 
 ```bash
 python -m app.app
@@ -112,10 +108,6 @@ src/components/prediction/distance_estimator.py
 
 | Issue                                        | Solution                                                                       |
 | -------------------------------------------- | ------------------------------------------------------------------------------ |
-| `cv2.imshow()` error in Flask                | Replaced with MJPEG streaming using `yield` in `flask_stream()` method         |
-| Port conflict (Flask default 5000)           | Changed to port `5050` and updated `EXPOSE 5050` in Dockerfile                 |
-| `pyqt5` and `lxml` install failure in Docker | Removed unused packages from `requirements.txt`                                |
-| YOLOv5 unable to write settings in `/root`   | YOLO defaulted to `/tmp/Ultralytics` without issues                            |
 | Webcam not accessible on deployed EC2        | Shifted to JavaScript-based webcam input or ensured camera device availability |
 | HTTPS for webcam                             | Used Ngrok as a tunneling solution when no domain was available                |
 
@@ -134,10 +126,10 @@ src/components/prediction/distance_estimator.py
 ## Coming Soon
 
 - [ ] User uploads for custom object training
-- [ ] Webcam stream to remote clients
-- [ ] Stream recording and snapshots
 - [ ] Model selection dropdown
 - [ ] Confidence threshold slider
+- [ ] Webcam stream to remote clients (This feature has been implemented for locally trained models.)
+- [ ] Stream recording and snapshots (This feature has been implemented for locally trained models.)
 
 ---
 
