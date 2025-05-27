@@ -102,6 +102,25 @@ src/components/prediction/distance_estimator.py
 
 ---
 
+## Deployment Notes & Issues Faced
+
+### ✅ Deployment Method:
+
+- Docker → Amazon ECR → Amazon EC2 (using GitHub Actions)
+
+### 🛠️ Issues Encountered & Fixes:
+
+| Issue                                        | Solution                                                                       |
+| -------------------------------------------- | ------------------------------------------------------------------------------ |
+| `cv2.imshow()` error in Flask                | Replaced with MJPEG streaming using `yield` in `flask_stream()` method         |
+| Port conflict (Flask default 5000)           | Changed to port `5050` and updated `EXPOSE 5050` in Dockerfile                 |
+| `pyqt5` and `lxml` install failure in Docker | Removed unused packages from `requirements.txt`                                |
+| YOLOv5 unable to write settings in `/root`   | YOLO defaulted to `/tmp/Ultralytics` without issues                            |
+| Webcam not accessible on deployed EC2        | Shifted to JavaScript-based webcam input or ensured camera device availability |
+| HTTPS for webcam                             | Used Ngrok as a tunneling solution when no domain was available                |
+
+---
+
 ## Requirements
 
 - Python 3.8+
@@ -127,8 +146,8 @@ src/components/prediction/distance_estimator.py
 - [Ultralytics YOLOv5](https://github.com/ultralytics/ultralytics)
 - [OpenCV](https://opencv.org/)
 - [Flask](https://flask.palletsprojects.com/)
-- [makesense] (https://www.makesense.ai/)
+- [makesense.ai](https://www.makesense.ai/)
 
 ---
 
-> Built with 💡 by Mythili Sekar Sriram
+> Built by Mythili Sekar Sriram
