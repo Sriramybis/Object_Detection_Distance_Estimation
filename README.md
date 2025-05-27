@@ -74,7 +74,7 @@ Copy the resulting best model to `artifacts/best.pt`.
 python -m app.app
 ```
 
-Go to: [http://localhost:5000](http://localhost:5000)
+Go to: [http://localhost:5050](http://localhost:5050)
 
 ---
 

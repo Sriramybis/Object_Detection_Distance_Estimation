@@ -2,55 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Live YOLOv5 Detection</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Object Detection</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
     />
   </head>
   <body>
-    <h1>📷 Live Object Detection & Distance Estimation</h1>
-
-    <div class="controls">
-      <button id="toggle-btn">▶ Start Detection</button>
+    <div class="container">
+      <h1>Real-Time Object Detection</h1>
+      <div class="video-wrapper">
+        <video id="webcam" autoplay muted playsinline></video>
+        <canvas id="overlay"></canvas>
+      </div>
+      <div class="controls">
+        <button id="toggleButton">Start Detection</button>
+      </div>
+      <p class="note">
+        Make sure to allow camera access in your browser. Detections will appear
+        overlaid on the video feed.
+      </p>
     </div>
-
-    <div class="video-wrapper" style="display: none" id="video-container">
-      <img
-        id="video-feed"
-        src="{{ url_for('video_feed') }}"
-        alt="Live Detection Feed"
-      />
-    </div>
-
-    <div class="footer">
-      <p>Press <strong>Q</strong> in terminal to quit if running locally.</p>
-    </div>
-
-    <script>
-      const toggleBtn = document.getElementById("toggle-btn");
-      const videoContainer = document.getElementById("video-container");
-      const videoFeed = document.getElementById("video-feed");
-
-      let streamActive = false;
-
-      toggleBtn.addEventListener("click", () => {
-        if (!streamActive) {
-          videoFeed.src = "{{ url_for('video_feed') }}";
-          videoContainer.style.display = "block";
-          toggleBtn.textContent = "⏹ Stop Detection";
-          streamActive = true;
-        } else {
-          videoFeed.src = "";
-          videoContainer.style.display = "none";
-          toggleBtn.textContent = "▶ Start Detection";
-          streamActive = false;
-        }
-      });
-    </script>
+    <script src="{{ url_for('static', filename='webcam.js') }}"></script>
   </body>
 </html>
